@@ -1,0 +1,87 @@
+openapi: 3.0.0
+info: 
+  title: Summative Assessment Spring Boot and REST
+  description: This web service is a quote-of-the-day, word-of-the-day, and magic 8-ball service
+  version: 0.0.1
+servers:
+  - url: 'http://localhost:8080'
+    description: Local dev server
+paths:
+  /quote:
+    get:
+      summary: Get the quote of the day
+      responses:
+        '200':
+          description: Quote object which contains the author and the quote was passed on successfully.
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/quote'
+          
+  /word:        
+    get:
+      summary: Get the word of the day
+      responses:
+        '200':
+          description: Word object which contains word and its definition was passed on successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/word'
+          
+  /magic:
+    post:
+      summary: Magic 8 ball game. Ask a question and get an answer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/answer'
+              
+      responses:
+        '200':
+          description: Successfully answered to the question.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/answer'
+        '400':
+          description: Bad Request. 
+  
+
+components:
+  schemas:
+  #this one is for Quote API objects
+    quote:
+      properties:
+        author:
+          type: string
+        quote:
+          type: string
+      required: 
+        - author
+        - quote
+  #this one is for Word API objects
+    word:
+      properties:
+        word:
+          type: string
+        definition:
+          type: string
+      required: 
+        - word
+        - definition
+  #this one is for Magic 8-ball API objects
+    answer:
+      properties:
+        question:
+          type: string
+        answer:
+          type: string
+      required: 
+        - question
+        - answer
+       

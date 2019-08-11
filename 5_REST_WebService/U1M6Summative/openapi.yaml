@@ -1,0 +1,283 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: U1-M6-Summative-LastName-FirstName
+  description: This API will track a table of cutomers , items, and the invoices associated with the cutomer and items
+  
+servers: 
+  - url: http://localhost:8080
+    description: Local dev server
+
+#Paths for the API are provided below
+paths:
+  /customer:
+    post:
+      summary: Get a list of all customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/customer'
+      responses:
+        #Successful response
+        '201':
+          description: Add a new cutomer to the database
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/customer'
+        #Unsuccessful response
+        '400':
+          description: Invalid request syntax
+        '422':
+          description: Incomplete customer data; customer fields are missing
+      
+    get:
+      responses:
+          '200':
+            description: Return a list of customers to the user
+            content:
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/customer'
+  
+  /customer/{customerId}:
+    parameters: 
+      - name: customerId
+        in: path
+        required: true
+        description: Look up customer based on customer Id
+        schema:
+          type: integer
+
+    get:
+      summary: Returns a customer for a given customer ID
+      description: Returns a customer for a given customer ID
+      responses:
+        '200':
+          description: Okay
+        '400':
+          description: Must provide a valid customer ID
+        
+    put:
+      summary: Update a customer in the database
+      description: Update a customer in the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/customer'
+      responses:
+        '200':
+          description: Successfully updated
+        '400':
+          description: Invalid request syntax
+        '422':
+          description: Incomplete customer data; customer fields are missing
+      
+    delete:
+      summary: Remove a customer from the database
+      responses:
+        '200':
+          description: Customer successfully deleted
+    
+  /item:
+    post:
+      summary: Get a list of all items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/item'
+      responses:
+        #Successful response
+        '201':
+          description: Add a new item to the database
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/item'
+        #Unsuccessful response
+        '400':
+          description: Invalid request syntax
+        '422':
+          description: Incomplete customer data; customer fields are missing
+      
+    get:
+      responses:
+          '200':
+            description: Return a list of items to the user
+            content:
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/item'
+  /item/{itemId}:
+    parameters: 
+      - name: itemId
+        in: path
+        required: true
+        description: Look up customer based on item Id
+        schema:
+          type: integer
+
+    get:
+      summary: Returns a item for a given item ID
+      description: Returns a item for a given item ID
+      responses:
+        '200':
+          description: Okay
+        '400':
+          description: Must provide a valid item ID
+        
+    put:
+      summary: Update a item in the database
+      description: Update a item in the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/item'
+      responses:
+        '200':
+          description: Successfully updated
+        '400':
+          description: Invalid request syntax
+        '422':
+          description: Incomplete item data; item fields are missing
+      
+    delete:
+      summary: Remove a item from the database
+      responses:
+        '200':
+          description: Item successfully deleted
+    
+  /invoice:
+    post:
+      summary: Get a list of all invoices
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/invoice'
+      responses:
+        #Successful response
+        '201':
+          description: Add a new invoice to the database
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/invoice'
+        #Unsuccessful response
+        '400':
+          description: Invalid request syntax
+        '422':
+          description: Incomplete invoice data; invoice fields are missing
+      
+
+  /invoice/{invoiceId}:
+    parameters: 
+      - name: invoiceId
+        in: path
+        required: true
+        description: Look up customer based on invoice Id
+        schema:
+          type: integer
+    delete:
+      summary: Remove a invoice from the database
+      responses:
+        '200':
+          description: Invoice successfully deleted
+  
+  /invoice/{customerId}:
+    parameters: 
+      - name: customerId
+        in: path
+        required: true
+        description: Look up customer based on invoice Id
+        schema:
+          type: integer
+    get:
+      summary: Returns invoices for a given customer ID
+      description: Returns an invoice for a given customer ID
+      responses:
+        '200':
+          description: Okay
+        '400':
+          description: Must provide a valid customer ID
+
+
+#List of required Java classes that will be implemented
+components:
+  schemas:
+    customer:
+      type: object
+      properties:
+        customerId:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        company:
+          type: string
+        phone:
+          type: string
+      required: 
+        - id
+        - firstName
+        - lastName
+        - email
+        - company
+        - phone
+    
+    item:
+      type: object
+      properties:
+        itemId:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        dailyRate:
+          type: number
+          format: currency
+      required:
+        - itemId
+        - name
+        - dailyRate
+    
+    invoice:
+      type: object
+      properties:
+        invoiceId:
+          type: integer
+        customerId:
+          type: integer
+        orderDate:
+          type: string
+          format: date
+        pickupDate:
+          type: string
+          format: date
+        returnDate:
+          type: string
+          format: date
+        lateFee:
+          type: number
+          format: currency
+      required:
+        - invoiceId
+        - customerId
+        - orderDate
+        - pickupDate
+        - returnDate
+        - lateFee
+

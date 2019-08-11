@@ -1,0 +1,19 @@
+openapi: 3.0.0
+info:
+  title: U2M1 Summative - adserver-service
+  description: adserver-service that is being called from tasker-service to provide the advertisement.
+  version: 0.0.1
+servers:
+  - url: 'http://localhost:6107'
+    description: Local dev server
+paths:
+  /ad:
+    get:
+      summary: Randomly generates an advertisement for the tasker-service which will be inside of the Task Object.
+      responses:
+        '200':
+          description: a string of advertisment successfully sent to the tasker service.
+          content:
+            application/json:
+              schema:
+                type: string

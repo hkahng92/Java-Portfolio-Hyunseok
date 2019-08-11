@@ -1,0 +1,140 @@
+openapi: 3.0.0
+info: 
+  title: U2M1 Summative - Tasker Service Project
+  description: Using the Spring Cloud Config Server, Eureka Service Registry and adserver-service, demonstrating the coding ability to fix bugs, finish features and modify existing code to successfully create a Tasker Service.
+  version: 0.0.1
+servers:
+  - url: 'http://localhost:3308'
+    description: Local dev server
+paths:
+  /tasks:
+    post:
+      summary: Create a new task along with an advertisement attached from the adserver-service.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: A Task object
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Task'
+        '400':
+          description: Invalid request syntax and/or date format exception error.
+        '422':
+          description: Unprocessed entity. This error will occur when any of the required field inputs are invalid.
+    get:
+      summary: Retrieves all the task(s) in the database.
+      responses:
+        '200':
+          description: Array of Task objects returned to the user.
+          content:
+            array:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '404':
+          description: There is not a single record of Task Object in the database to be returned to the user.
+    put:
+      summary: Update the entry for the task with the given ID
+      requestBody:
+        required: true
+        content:
+          applicaton/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '204':
+          description: Task successfully updated.
+        '400':
+          description: Invalid request syntax and/or date format exception error.
+        '422':
+          description: Unprocessed entity. This error will occur when any of the required field inputs are invalid.
+          
+  /tasks/{id}:
+    get:
+      summary: Retrieves the entry for the task with the given ID
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: ID of the task you want to retrieve
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: Task object matching given ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Incorrect ID information. task cannot be found by the given ID.
+    delete:
+      summary: Deletes the entry for the task with the given ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the task you would like to delete.
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '204':
+          description: task successfully deleted.
+        '422':
+          description: Unprocessed entity. This error will occur when any of the required field inputs are invalid.
+
+  /tasks/category/{category}:
+    get:
+      summary: Retrieves the list of entries for the task with the given category value.
+      parameters: 
+        - name: category
+          in: path
+          required: true
+          description: value of the category you would like to retrieve the task(s) by.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of task objects matching given category value.
+          content:
+            array:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '404':
+          description: Incorrect category information. task(s) cannot be found by the given category value.
+          
+components:
+  schemas:
+    Task:
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+        createDate:
+          type: string
+          format: date
+        dueDate:
+          type: string
+          format: date
+        category:
+          type: string
+        advertisement:
+          type: string
+      required:
+        - descripton
+        - createDate
+        - dueDate
